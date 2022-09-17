@@ -49,17 +49,17 @@ module.exports = (sequelize, DataTypes) => {
 
     static async dueToday() {
       // FILL IN HERE TO RETURN ITEMS DUE tODAY
-      return Todo.findAll({ where: { dueDate: new Date() }, order: [["id", "ASC"]] });
+      return await Todo.findAll({ where: { dueDate: new Date() }, order: [["id", "ASC"]] });
     }
 
     static async dueLater() {
       // FILL IN HERE TO RETURN ITEMS DUE LATER
-      return Todo.findAll({ where: { dueDate: { [Op.gt]: new Date() } }, order: [["id", "ASC"]] });
+      return await Todo.findAll({ where: { dueDate: { [Op.gt]: new Date() } }, order: [["id", "ASC"]] });
     }
 
-    static markAsComplete(id) {
+    static async markAsComplete(id) {
       // FILL IN HERE TO MARK AN ITEM AS COMPLETE
-      Todo.update(
+      await Todo.update(
         { completed: true },
         { where: { id: id } }
       );
