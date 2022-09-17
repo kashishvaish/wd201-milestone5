@@ -16,23 +16,35 @@ module.exports = (sequelize, DataTypes) => {
 
       console.log("Overdue");
       // FILL IN HERE
-      Todo.overdue().then((result) => result.forEach((task) => console.log(task.displayableString())));
+      let overdue = await Todo.overdue();
+      overdue.forEach(task => {
+        let checkbox = task.completed ? "[x]" : "[ ]";
+        console.log(`${task.id}. ${checkbox} ${task.title} ${task.dueDate}`);
+      });
       console.log("\n");
 
       console.log("Due Today");
       // FILL IN HERE
-      Todo.dueToday().then((result) => result.forEach((task) => console.log(task.displayableStringDueToday())));
+      let duetoday = await Todo.dueToday();
+      duetoday.forEach(task => {
+        let checkbox = task.completed ? "[x]" : "[ ]";
+        console.log(`${task.id}. ${checkbox} ${task.title}`);
+      });
       console.log("\n");
 
       console.log("Due Later");
       // FILL IN HERE
-      Todo.dueLater().then((result) => result.forEach((task) => console.log(task.displayableString())));
+      let duelater = await Todo.dueLater();
+      duelater.forEach(task => {
+        let checkbox = task.completed ? "[x]" : "[ ]";
+        console.log(`${task.id}. ${checkbox} ${task.title} ${task.dueDate}`);
+      });
 
     }
 
     static async overdue() {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
-      return Todo.findAll({ where: { dueDate: { [Op.lt]: new Date() } }, order: [["id", "ASC"]] });
+      return await Todo.findAll({ where: { dueDate: { [Op.lt]: new Date() } }, order: [["id", "ASC"]] });
     }
 
     static async dueToday() {
@@ -45,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       return Todo.findAll({ where: { dueDate: { [Op.gt]: new Date() } }, order: [["id", "ASC"]] });
     }
 
-    static async markAsComplete(id) {
+    static markAsComplete(id) {
       // FILL IN HERE TO MARK AN ITEM AS COMPLETE
       Todo.update(
         { completed: true },
@@ -56,11 +68,6 @@ module.exports = (sequelize, DataTypes) => {
     displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
       return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
-    }
-
-    displayableStringDueToday() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title}`;
     }
   }
   Todo.init(
